@@ -55,15 +55,15 @@ go build -o server server/main.go
 this is a test message>1
 ```
 
-##Understanding the Code
+## Understanding the Code
 
-###Client
+### Client
 The client application (client/main.go) allows users to input sensor data and sensor ID from the command line. It connects to the server, sends the data using the IoTSense protocol, and sends a termination packet to signal the end of the transmission.
 
-###Server
+### Server
 The server application (server/main.go) listens for incoming connections on a specified port and processes incoming IoTSense packets. When a data packet is received, the server prints the sensor data and sensor ID.
 
-###Packet Structure
+### Packet Structure
 The `IoTSensePacket` structure represents packets in the IoTSense protocol:
 
 ```bash
@@ -75,7 +75,7 @@ type IoTSensePacket struct {
 }
 ```
 
-##Contributing
+## Contributing
 1. Fork the repository
 2. Create a new feature branch (`git checkout -b feature/new-feature`)
 3. Commit your changes (`git commit -am 'Add new feature'`)
