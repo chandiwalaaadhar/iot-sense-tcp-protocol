@@ -41,7 +41,7 @@ func startServer() {
 			continue
 		}
 
-		go handleConnection(conn)
+		go handleConnection(conn) // handle the connection in a separate goroutine
 	}
 }
 
@@ -64,6 +64,7 @@ func handleConnection(conn net.Conn) {
 
 		if packet.PacketType == DATA {
 			fmt.Println("Data:", string(packet.Data)) // print the data
+			fmt.Println("SensorId:", packet.SensorID)
 		}
 
 		if packet.PacketType == TERMINATE {

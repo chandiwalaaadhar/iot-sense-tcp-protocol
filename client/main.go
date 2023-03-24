@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 )
 
 const (
@@ -28,13 +29,32 @@ func main() {
 func startClient() {
 	for { // loop forever to allow the user to send multiple messages
 		fmt.Println("Enter data to send to IOT Server: ")
-		reader := bufio.NewReader(os.Stdin)     // create a reader to read from the console
-		message, err := reader.ReadString('\n') // read until newline character is encountered
+		reader := bufio.NewReader(os.Stdin)    // create a reader to read from the console
+		message, err := reader.ReadString('>') // read until > character is encountered
 		if err != nil {
 			fmt.Println("Error reading message:", err)
 			continue // continue to the next iteration of the loop
 		}
-		message = message[:len(message)-1] // remove newline character
+
+		sensorId, err := reader.ReadString('\n') // read until newline character is encountered
+		if err != nil {
+			fmt.Println("Error reading sensorId:", err)
+			continue // continue to the next iteration of the loop
+		}
+
+		message = message[:len(message)-1]    // remove > character
+		sensorId = sensorId[:len(sensorId)-1] // remove \n character
+
+		fmt.Println("Message:", message)
+		fmt.Println("SensorId:", sensorId)
+
+		sensorIdInt64, err := strconv.ParseUint(sensorId, 10, 16)
+		if err != nil {
+			fmt.Println("Error while parsing sensorId to Integer:", err)
+			return
+		}
+
+		uint16Num := uint16(sensorIdInt64)
 
 		conn, err := net.Dial("tcp", "localhost:8080") // connect to the server
 		if err != nil {
@@ -46,7 +66,7 @@ func startClient() {
 		// Example data packet
 		dataPacket := &IoTSensePacket{
 			PacketType: DATA,
-			SensorID:   1,
+			SensorID:   uint16Num,
 			DataLength: uint16(len(message)),
 			Data:       []byte(message),
 		}
